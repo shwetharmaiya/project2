@@ -1,0 +1,98 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="container">
+    <h2>Listing:{{item.title}}</h2>
+
+<br>
+    <p><b>Description:</b>{{item.description}}</p>
+<br>
+{% if user.username %}
+<p>
+  {% if added %}
+    <a href="{% url 'removewatchlist' item.id %}"><button class="btn btn-danger">Remove from watchlist</button></a>
+  {% else %}
+    <a href="{% url 'addwatchlist' item.id %}"><button class="btn btn-success">Add to watchlist</button></a>
+  {% endif %}
+</p>
+{% endif %}
+<br>
+
+<h3>Current Bid:₹{{item.price}}</h3>
+{% if user.username %}
+{% if owner %}
+<br>
+<a href="{% url 'closebid' item.id %}"><button class="btn btn-warning">Close Bid</button></a>
+<br>
+{% endif %}
+{% endif %}
+<br>
+<p><b>Details:</b>
+    <ul>
+        <li><b>Owner:</b>{{item.owner}}</li>
+        <li><b>Category:</b>{{item.category}}</li>
+        <li><b>Created on:</b>{{item.time}}</li>
+    </ul>
+</p>
+<br>
+{% if error %}
+<div class="alert alert-danger" role="alert">
+    {{error}}
+</div>
+{% endif %}
+{% if successgreen %}
+<div class="alert alert-success" role="alert">
+    {{successgreen}}
+</div>
+{% endif %}
+
+{% if user.username %}
+<div class="container">
+  <h3>Place your bid:</h3>
+  <form method="POST" action="{% url "bidsubmit" item.id %}">
+    {% csrf_token %}
+    <div class="form-row align-items-center">
+      <div class="col-auto">
+        <input type="number" class="form-control mb-2" id="inlineFormInput" name="bid" placeholder="Place your bid...">
+      </div>
+      <div class="col-auto">
+        <button type="submit" class="btn btn-primary mb-2">Submit Bid</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+
+<div class="container">
+  <form method="POST" action="{% url "commentsubmit" item.id %}">
+    {% csrf_token %}
+    <div class="formgroup">
+      <label for= "formControlTextArea1"> <b> Write a comment: </b></label>
+        <textarea class="form-control" id="formControlTextArea1" rows=3 name="comment"  placeholder="Write your comment here." required></textarea>
+    </div>
+    <button class="btn btn-secondary" type="submit">Submit</button>
+  </form>
+</div>
+{% endif %}
+{% if comments %}
+<h3> Comments </h3>
+<div class="container">
+            
+    {% for c in comments %}
+    <div class="card mb-3" style="max-width: 540px;">
+      <div class="row no-gutters">
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title">{{c.user}}</h5>
+            <p class="card-text">{{c.comment}}</p>
+            <p class="card-text"><small class="text-muted">{{c.time}} UTC</small></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+   
+</div>
+{% endif %}
+</div>
+{% endblock %}
