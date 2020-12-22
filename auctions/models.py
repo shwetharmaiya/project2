@@ -11,7 +11,7 @@ class AuctionListings(models.Model):
     desc = models.CharField(max_length=256)
     category = models.CharField(max_length=64)
     price = models.IntegerField()
-    link = models.CharField(max_length=64,default=None,blank=True,null=True)
+    link = models.CharField(max_length=256,default=None,blank=True,null=True)
     time = models.CharField(max_length=64, default=timezone.now())
 
     class Meta:
@@ -42,4 +42,4 @@ class Alllisting(models.Model):
     listingid = models.IntegerField()
     title = models.CharField(max_length=64)
     description = models.TextField()
-    link = models.CharField(max_length=64,default=None,blank=True,null=True)
+    link = models.CharField(max_length=256,default=None,blank=True,null=True)
